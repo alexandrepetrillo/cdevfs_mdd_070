@@ -3,7 +3,7 @@
  * Philippe-Henri Gosselin, Edition ENI
  */
 
-package pacman.ui.awt;
+package pacman.gui;
 
 public interface Layer {
 

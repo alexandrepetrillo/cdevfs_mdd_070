@@ -3,14 +3,13 @@
  * Philippe-Henri Gosselin, Edition ENI
  */
 
-package pacman.ui.awt;
+package pacman.gui.awt;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import pacman.gui.Layer;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 public class AWTLayer implements Layer {
 
@@ -54,7 +53,7 @@ public class AWTLayer implements Layer {
         try {
             texture = ImageIO.read(this.getClass().getClassLoader().getResource(fileName));
         } catch (IOException ex) {
-            Logger.getLogger(AWTLayer.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Erreur lors de la lecture de "+fileName);
         }
         textureWidth = texture.getWidth() / tileWidth;
         textureHeight = texture.getHeight() / tileHeight;

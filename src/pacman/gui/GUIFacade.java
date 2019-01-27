@@ -3,7 +3,7 @@
  * Philippe-Henri Gosselin, Edition ENI
  */
 
-package pacman.ui.awt;
+package pacman.gui;
 
 public interface GUIFacade {
 
@@ -22,4 +22,11 @@ public interface GUIFacade {
     public Layer createLayer();
 
     public void drawLayer(Layer layer);
+    
+    public Keyboard getKeyboard();
+    
+    public Mouse getMouse();
+    
+    public void setClosingRequested(boolean closingRequested);
+
 }

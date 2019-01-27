@@ -3,7 +3,7 @@
  * Philippe-Henri Gosselin, Edition ENI
  */
 
-package pacman.ui.old;
+package pacman.gui.old;
 
 import java.awt.Canvas;
 import java.awt.Color;
