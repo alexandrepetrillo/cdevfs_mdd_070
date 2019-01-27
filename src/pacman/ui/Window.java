@@ -18,7 +18,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * Affichage avec des tuiles avec AWT
+ * Affichage d'un niveau en tuiles avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -35,6 +35,17 @@ public class Window extends Frame {
     private int textureWidth;
     private int textureHeight;
 
+    static final int levelWidth = 9;
+    static final int levelHeight = 6;
+    static final int[][] level = new int[][] {
+            { 15,11,11,11,11,11,11,11,16 },
+            { 12,5,3,3,3,3,3,3,12 },
+            { 12,3,15,11,11,11,16,3,12 },
+            { 14,3,13,11,11,11,14,3,13 },
+            { 3,3,3,3,3,3,3,3,3 },
+            { 11,11,11,11,11,11,11,11,11 }
+    };
+
     public void init() {
         setTitle("Affichage et contrôles avec AWT");
         setSize(200,200);
@@ -47,6 +58,9 @@ public class Window extends Frame {
     }
 
     public void createCanvas() {
+        canvasWidth = levelWidth * tileWidth;
+        canvasHeight = levelHeight * tileHeight;
+
         canvas = new Canvas();
         canvas.setPreferredSize(new Dimension(canvasWidth,canvasHeight));
         canvas.setMinimumSize(new Dimension(canvasWidth,canvasHeight));
@@ -74,10 +88,29 @@ public class Window extends Frame {
             g.setColor(Color.black);
             g.fillRect(0,0,canvasWidth,canvasHeight);
 
+            for (int j=0;j<levelHeight;j++) {
+                for (int i=0;i<levelWidth;i++) {
+                    int tileIndex = level[j][i];
+                    if (tileIndex < 0)
+                        tileIndex = 0;
+                    int tileX = (tileIndex-1) % textureWidth;
+                    int tileY = (tileIndex-1) / textureHeight;
+                    if (tileY >= textureHeight) {
+                        tileX = 0;
+                        tileY = 0;
+                    }
+                    g.drawImage(texture,
+                            i * tileWidth, j * tileHeight, i * tileWidth + tileWidth, j * tileHeight + tileHeight,
+                            tileX * tileWidth, tileY * tileHeight, tileX * tileWidth + tileWidth, tileY * tileHeight + tileHeight,
+                            null
+                    );
+                }
+            }
+
             int tileX = 0;
             int tileY = 2;
-            int screenX = (canvasWidth - tileWidth)/2;
-            int screenY = (canvasHeight - tileHeight)/2;
+            int screenX = 0;
+            int screenY = 4*tileHeight;
             g.drawImage(texture,
                     screenX, screenY, screenX + tileWidth, screenY + tileHeight,
                     tileX * tileWidth, tileY * tileHeight, tileX * tileWidth + tileWidth, tileY * tileHeight + tileHeight,
