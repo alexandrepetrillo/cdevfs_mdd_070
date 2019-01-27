@@ -5,6 +5,8 @@
 
 package pacman.gui;
 
+import java.io.IOException;
+
 public interface Layer {
 
     public int getTileWidth();
