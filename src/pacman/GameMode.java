@@ -6,6 +6,7 @@
 package pacman;
 
 import pacman.gui.GUIFacade;
+import java.util.LinkedList;
 
 public abstract class GameMode {
 
@@ -24,6 +25,10 @@ public abstract class GameMode {
     public void setGameMode(GameMode mode) {
         parent.setGameMode(mode);
     }
+    
+    public void setPreviousGameMode() {
+        parent.setPreviousGameMode();
+    }    
     
     public abstract void handleInputs();
     

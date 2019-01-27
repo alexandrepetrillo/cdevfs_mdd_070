@@ -74,7 +74,7 @@ public class PlayGameMode extends GameMode {
         switch(keyboard.getLastPressedKey()) {
             case KeyEvent.VK_ESCAPE:
                 keyboard.consumeLastPressedKey();
-                setGameMode(new MainMenuGameMode());
+                setPreviousGameMode();
                 return;
         }
         
@@ -105,7 +105,7 @@ public class PlayGameMode extends GameMode {
         }
     }
     
-    private long lastUpdate1,lastUpdate2;
+    private long lastUpdate1, lastUpdate2;
     public void update() {
         long now = System.nanoTime();
         if ( (now - lastUpdate1) >= 1000000000/4) {
@@ -155,6 +155,5 @@ public class PlayGameMode extends GameMode {
             gui.endPaint();
         }
     }
-
 
 }

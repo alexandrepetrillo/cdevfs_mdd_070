@@ -7,6 +7,7 @@ package pacman;
 
 import pacman.gui.GUIFacade;
 import pacman.gui.awt.AWTGUIFacade;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
 public class Main {
@@ -15,13 +16,15 @@ public class Main {
     
     private GameMode currentMode;
 
-    
+    private LinkedList<GameMode> gameModes = new LinkedList();
+  
     public void setGUI(GUIFacade gui) {
         this.gui = gui;
     }
     
     public synchronized void setGameMode(GameMode mode) {
         try {
+            gameModes.push(mode);
             mode.setParent(this);
             mode.setGUI(gui);
             mode.init();
@@ -32,6 +35,18 @@ public class Main {
             JOptionPane.showMessageDialog(null, ex.getMessage(),"Erreur",JOptionPane.ERROR_MESSAGE);
         }
     }    
+    
+    public synchronized void setPreviousGameMode() {
+        if (!gameModes.isEmpty()) {
+            gameModes.pop();
+        }
+        if (gameModes.isEmpty()) {
+            gui.setClosingRequested(true);
+        }
+        else {
+            setGameMode(gameModes.pop());
+        }
+    }      
     
     public void run() {
         int fps = 60;

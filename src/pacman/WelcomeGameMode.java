@@ -5,8 +5,9 @@
 
 package pacman;
 
+import pacman.menu.MenuGameMode;
 import pacman.gui.*;
-import java.awt.Color;
+import pacman.menu.MainMenu;
 import java.awt.event.KeyEvent;
 
 public class WelcomeGameMode extends GameMode {
@@ -32,7 +33,7 @@ public class WelcomeGameMode extends GameMode {
             case KeyEvent.VK_SPACE:
             case KeyEvent.VK_ENTER:
                 keyboard.consumeLastPressedKey();
-                setGameMode(new MainMenuGameMode());
+                setGameMode(new MainMenu());
                 return;
         }
     }
@@ -53,6 +54,5 @@ public class WelcomeGameMode extends GameMode {
             gui.endPaint();
         }
     }
-
 
 }
