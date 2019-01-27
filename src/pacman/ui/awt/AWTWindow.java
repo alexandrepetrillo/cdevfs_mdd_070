@@ -22,8 +22,8 @@ public class AWTWindow extends Frame {
     private int canvasWidth = 800;
 
     private int canvasHeight = 600;
-    
-    private BufferStrategy bs;    
+
+    private BufferStrategy bs;
 
     public void init(String title) {
         setTitle(title);
@@ -38,8 +38,10 @@ public class AWTWindow extends Frame {
         closingRequested = false;
     }
 
-    public void createCanvas() {
+    public void createCanvas(int width, int height) {
         canvas = new Canvas();
+        canvasWidth = width;
+        canvasHeight = height;
         canvas.setPreferredSize(new Dimension(canvasWidth, canvasHeight));
         canvas.setMinimumSize(new Dimension(canvasWidth, canvasHeight));
         canvas.setMaximumSize(new Dimension(canvasWidth, canvasHeight));
@@ -73,5 +75,4 @@ public class AWTWindow extends Frame {
             bs.show();
         }
     }
-
 }
