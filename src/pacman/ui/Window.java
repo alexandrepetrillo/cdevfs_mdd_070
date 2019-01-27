@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * Animations avec AWT
+ * Gestion du clavier avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -46,6 +48,44 @@ public class Window extends Frame {
             { 11,11,11,11,11,11,11,11,11 }
     };
 
+    private static class Keyboard implements KeyListener {
+
+        private boolean[] keys;
+
+        public Keyboard() {
+            keys = new boolean[0x10000];
+        }
+
+        public boolean isKeyPressed(int keyCode) {
+            if (keyCode >= keys.length)
+                return false;
+            return keys[keyCode];
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() < keys.length) {
+                keys[e.getKeyCode()] = true;
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() < keys.length) {
+                keys[e.getKeyCode()] = false;
+            }
+        }
+
+    }
+
+    private Keyboard keyboard;
+    private int pacmanX;
+    private int pacmanY;
+
     public void init() {
         setTitle("Affichage et contrôles avec AWT");
         setSize(200,200);
@@ -66,6 +106,10 @@ public class Window extends Frame {
         canvas.setMinimumSize(new Dimension(canvasWidth,canvasHeight));
         canvas.setMaximumSize(new Dimension(canvasWidth,canvasHeight));
         add(canvas);
+
+        keyboard = new Keyboard();
+        canvas.addKeyListener(keyboard);
+
         pack();
     }
 
@@ -73,6 +117,23 @@ public class Window extends Frame {
         texture = ImageIO.read(this.getClass().getClassLoader().getResource("grid_tiles.png"));
         textureWidth = texture.getWidth() / tileWidth;
         textureHeight = texture.getHeight() / tileHeight;
+    }
+
+    public void handleInputs() {
+        canvas.requestFocus();
+
+        if (keyboard.isKeyPressed(KeyEvent.VK_RIGHT)) {
+            pacmanX ++;
+        }
+        if (keyboard.isKeyPressed(KeyEvent.VK_LEFT)) {
+            pacmanX --;
+        }
+        if (keyboard.isKeyPressed(KeyEvent.VK_DOWN)) {
+            pacmanY ++;
+        }
+        if (keyboard.isKeyPressed(KeyEvent.VK_UP)) {
+            pacmanY --;
+        }
     }
 
     private long lastUpdate;
@@ -124,10 +185,8 @@ public class Window extends Frame {
 
             int tileX = 0;
             int tileY = 2;
-            int screenX = 0;
-            int screenY = 4*tileHeight;
             g.drawImage(texture,
-                    screenX, screenY, screenX + tileWidth, screenY + tileHeight,
+                    pacmanX, pacmanY, pacmanX + tileWidth, pacmanY + tileHeight,
                     tileX * tileWidth, tileY * tileHeight, tileX * tileWidth + tileWidth, tileY * tileHeight + tileHeight,
                     null
             );
@@ -154,6 +213,7 @@ public class Window extends Frame {
             }
             lastTime = nowTime;
 
+            handleInputs();
             update();
             render();
 
