@@ -18,7 +18,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * Afficher une image avec AWT
+ * Affichage avec des tuiles avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -28,7 +28,12 @@ public class Window extends Frame {
     private int canvasHeight = 600;
     private Canvas canvas;
     private boolean running = true;
+
     private BufferedImage texture;
+    private int tileWidth = 24;
+    private int tileHeight = 24;
+    private int textureWidth;
+    private int textureHeight;
 
     public void init() {
         setTitle("Affichage et contrôles avec AWT");
@@ -52,6 +57,8 @@ public class Window extends Frame {
 
     public void loadTexture() throws IOException {
         texture = ImageIO.read(this.getClass().getClassLoader().getResource("grid_tiles.png"));
+        textureWidth = texture.getWidth() / tileWidth;
+        textureHeight = texture.getHeight() / tileHeight;
     }
 
     public void render() {
@@ -67,7 +74,15 @@ public class Window extends Frame {
             g.setColor(Color.black);
             g.fillRect(0,0,canvasWidth,canvasHeight);
 
-            g.drawImage(texture, 0, 0, null);
+            int tileX = 0;
+            int tileY = 2;
+            int screenX = (canvasWidth - tileWidth)/2;
+            int screenY = (canvasHeight - tileHeight)/2;
+            g.drawImage(texture,
+                    screenX, screenY, screenX + tileWidth, screenY + tileHeight,
+                    tileX * tileWidth, tileY * tileHeight, tileX * tileWidth + tileWidth, tileY * tileHeight + tileHeight,
+                    null
+            );
 
             bs.show();
         }
