@@ -18,7 +18,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * Affichage d'un niveau en tuiles avec AWT
+ * Animations avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -73,6 +73,21 @@ public class Window extends Frame {
         texture = ImageIO.read(this.getClass().getClassLoader().getResource("grid_tiles.png"));
         textureWidth = texture.getWidth() / tileWidth;
         textureHeight = texture.getHeight() / tileHeight;
+    }
+
+    private long lastUpdate;
+    public void update() {
+        long now = System.nanoTime();
+        if ( (now - lastUpdate) < 1000000000/4)
+            return;
+        lastUpdate = now;
+        for (int j=0;j<levelHeight;j++) {
+            for (int i=0;i<levelWidth;i++) {
+                int id = level[j][i];
+                if (id == 5) level[j][i] = 4;
+                else if (id == 4) level[j][i] = 5;
+            }
+        }
     }
 
     public void render() {
@@ -139,6 +154,7 @@ public class Window extends Frame {
             }
             lastTime = nowTime;
 
+            update();
             render();
 
             long elapsed = System.nanoTime() - lastTime;
