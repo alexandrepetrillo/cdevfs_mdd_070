@@ -8,13 +8,11 @@ package pacman;
 import pacman.gui.Keyboard;
 import pacman.gui.Layer;
 import pacman.gui.Mouse;
-import pacman.gui.GUIFacade;
+import pacman.gui.awt.AWTGUIFacade;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class PlayGameMode implements GameMode {
-
-    protected GUIFacade gui;
+public class PlayGameMode extends GameMode {
 
     private Layer levelLayer;
 
@@ -46,11 +44,7 @@ public class PlayGameMode implements GameMode {
     private int selectedTileX;
 
     private int selectedTileY;
-
-    public void setGUI(GUIFacade gui) {
-        this.gui = gui;
-    }
-     
+    
     public void init() 
     {
         charsLayer = gui.createLayer();
@@ -78,6 +72,13 @@ public class PlayGameMode implements GameMode {
     }
     
     public void handleInputs() {
+        switch(keyboard.getLastPressedKey()) {
+            case KeyEvent.VK_ESCAPE:
+                keyboard.consumeLastPressedKey();
+                setGameMode(new WelcomeGameMode());
+                return;
+        }
+        
         if (keyboard.isKeyPressed(KeyEvent.VK_RIGHT)) {
             pacmanX ++;
         }

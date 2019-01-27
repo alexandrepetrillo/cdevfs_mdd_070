@@ -7,10 +7,24 @@ package pacman;
 
 import pacman.gui.GUIFacade;
 
-public interface GameMode {
-    
-    public abstract void setGUI(GUIFacade gui);
+public abstract class GameMode {
 
+    protected GUIFacade gui;
+    
+    private Main parent;
+    
+    public void setParent(Main parent) {
+        this.parent = parent;
+    }    
+    
+    public void setGUI(GUIFacade gui) {
+        this.gui = gui;
+    }
+
+    public void setGameMode(GameMode mode) {
+        parent.setGameMode(mode);
+    }
+    
     public abstract void handleInputs();
     
     public abstract void update();

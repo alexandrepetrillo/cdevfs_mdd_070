@@ -13,18 +13,19 @@ public class Main {
 
     private GUIFacade gui;
     
-    private GameMode mode;
+    private GameMode currentMode;
 
     
     public void setGUI(GUIFacade gui) {
         this.gui = gui;
     }
     
-    public void init() {
+    public synchronized void setGameMode(GameMode mode) {
         try {
-            mode = new PlayGameMode();
+            mode.setParent(this);
             mode.setGUI(gui);
             mode.init();
+            this.currentMode = mode;
         }
         catch(Exception ex) {
             ex.printStackTrace();
@@ -43,9 +44,11 @@ public class Main {
             }
             lastTime = nowTime;
 
-            mode.handleInputs();
-            mode.update();
-            mode.render();            
+            synchronized(this) {
+                currentMode.handleInputs();
+                currentMode.update();
+                currentMode.render();            
+            }
 
             long elapsed = System.nanoTime() - lastTime;
             long milliSleep = (nanoPerFrame - elapsed) / 1000000;
@@ -63,7 +66,7 @@ public class Main {
     public static void main(String args[]) {
         Main pacman = new Main();
         pacman.setGUI(new AWTGUIFacade());
-        pacman.init();
+        pacman.setGameMode(new WelcomeGameMode());
         pacman.run();
     }
 

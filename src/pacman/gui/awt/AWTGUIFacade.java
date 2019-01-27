@@ -115,4 +115,22 @@ public class AWTGUIFacade implements GUIFacade {
         return window.getMouse();
     }
 
+    public Image createImage(String fileName) {
+        AWTImage image = new AWTImage();
+        image.loadImage(fileName);
+        return image;
+    }
+
+    public void drawImage(Image image,int x,int y) {
+        if (graphics == null) {
+            return;
+        }
+        if (image == null)
+            throw new IllegalArgumentException("Pas de image");
+        if (!(image instanceof AWTImage))
+            throw new IllegalArgumentException("Type de image invalide");
+        AWTImage awtImage = (AWTImage) image;
+        awtImage.draw(graphics,x,y);
+    }
+
 }

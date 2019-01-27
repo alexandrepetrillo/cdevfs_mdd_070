@@ -27,6 +27,10 @@ public interface GUIFacade {
     
     public Mouse getMouse();
     
+    public Image createImage(String fileName);
+
+    public void drawImage(Image image, int x, int y);
+    
     public void setClosingRequested(boolean closingRequested);
 
 }
