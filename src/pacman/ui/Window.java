@@ -15,7 +15,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
 /**
- * Affichage en double buffer avec AWT
+ * Synchronisation de l'affichage avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -68,9 +68,30 @@ public class Window extends Frame {
         }
     }
 
-    public void run() {
+    public void run()
+    {
+        int fps = 60;
+        long nanoPerFrame = (long) (1000000000.0 / fps);
+        long lastTime = 0;
+
         while (running) {
+            long nowTime = System.nanoTime();
+            if ((nowTime-lastTime) < nanoPerFrame) {
+                continue;
+            }
+            lastTime = nowTime;
+
             render();
+
+            long elapsed = System.nanoTime() - lastTime;
+            long milliSleep = (nanoPerFrame - elapsed) / 1000000;
+            if (milliSleep > 0) {
+                try {
+                    Thread.sleep (milliSleep);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
         dispose();
     }
