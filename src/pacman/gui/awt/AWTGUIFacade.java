@@ -7,7 +7,11 @@ package pacman.gui.awt;
 
 import pacman.gui.*;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +63,7 @@ public class AWTGUIFacade implements GUIFacade {
         if (graphics == null) {
             return;
         }
+        
         graphics.dispose();
         graphics = null;
         window.switchBuffers();
@@ -132,5 +137,42 @@ public class AWTGUIFacade implements GUIFacade {
         AWTImage awtImage = (AWTImage) image;
         awtImage.draw(graphics,x,y);
     }
+    
+    public void setColor(Color color) {
+        if (graphics == null)
+            return;
+        graphics.setColor(color);
+    }
+    
+    public void setTextSize(int size) {
+        if (graphics == null)
+            return;
+        for (int i=2*size;i>=4;i--) {
+            Font font = new Font("Arial",Font.PLAIN,i);
+            graphics.setFont(font);
+            FontMetrics fm = graphics.getFontMetrics();
+            if (fm.getHeight() < size) {
+                break;
+            }
+        }
+    }
+    
+    @Override
+    public Dimension getTextMetrics(String text) {
+        FontMetrics fm = graphics.getFontMetrics();
+        int textWidth = fm.stringWidth(text);
+        int textHeight = fm.getHeight();
+        return new Dimension(textWidth,textHeight);
+    }    
+    
+    public void drawText(String text, int x, int y, int width, int height) {
+        if (graphics == null)
+            return;
+        FontMetrics fm = graphics.getFontMetrics();
+        graphics.clipRect(x, y, width, height);
+        graphics.drawString(text, x, y+fm.getAscent());
+        graphics.setClip(null);
+    }
+
 
 }

@@ -8,7 +8,6 @@ package pacman;
 import pacman.gui.Keyboard;
 import pacman.gui.Layer;
 import pacman.gui.Mouse;
-import pacman.gui.awt.AWTGUIFacade;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -75,7 +74,7 @@ public class PlayGameMode extends GameMode {
         switch(keyboard.getLastPressedKey()) {
             case KeyEvent.VK_ESCAPE:
                 keyboard.consumeLastPressedKey();
-                setGameMode(new WelcomeGameMode());
+                setGameMode(new MainMenuGameMode());
                 return;
         }
         
