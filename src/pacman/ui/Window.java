@@ -6,13 +6,16 @@
 package pacman.ui;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 
 /**
- * Création d'un canvas avec AWT
+ * Affichage en double buffer avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -21,6 +24,7 @@ public class Window extends Frame {
     private int canvasWidth = 800;
     private int canvasHeight = 600;
     private Canvas canvas;
+    private boolean running = true;
 
     public void init() {
         setTitle("Affichage et contrôles avec AWT");
@@ -28,7 +32,7 @@ public class Window extends Frame {
         setResizable(false);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
-                dispose();
+                running = false;
             }
         });
     }
@@ -42,11 +46,41 @@ public class Window extends Frame {
         pack();
     }
 
+    public void render() {
+        BufferStrategy bs = canvas.getBufferStrategy();
+        if (bs == null) {
+            canvas.createBufferStrategy(2);
+            return;
+        }
+        Graphics g = null;
+        try {
+            g = bs.getDrawGraphics();
+
+            g.setColor(Color.black);
+            g.fillRect(0,0,canvasWidth,canvasHeight);
+
+            bs.show();
+        }
+        finally {
+            if (g != null) {
+                g.dispose();
+            }
+        }
+    }
+
+    public void run() {
+        while (running) {
+            render();
+        }
+        dispose();
+    }
+
     public static void main(String args[]) {
         Window window = new Window();
         window.init();
         window.createCanvas();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        window.run();
     }
 }
