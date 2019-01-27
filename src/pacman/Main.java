@@ -43,13 +43,13 @@ public class Main {
                 continue;
             }
             lastTime = nowTime;
-
+            
             synchronized(this) {
                 currentMode.handleInputs();
                 currentMode.update();
                 currentMode.render();            
             }
-
+            
             long elapsed = System.nanoTime() - lastTime;
             long milliSleep = (nanoPerFrame - elapsed) / 1000000;
             if (milliSleep > 0) {
@@ -69,7 +69,5 @@ public class Main {
         pacman.setGameMode(new WelcomeGameMode());
         pacman.run();
     }
-
-
 
 }

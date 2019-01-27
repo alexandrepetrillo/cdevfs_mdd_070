@@ -8,10 +8,8 @@ package pacman.gui.awt;
 import pacman.gui.*;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +22,12 @@ public class AWTGUIFacade implements GUIFacade {
     private AWTWindow window;
 
     private Graphics graphics;
+    
+    private AWTFonts fonts;
+    
+    public AWTGUIFacade() {
+        fonts = new AWTFonts();
+    }
 
     public void createWindow(int width, int height, String title) {
         if (window == null) {
@@ -147,14 +151,7 @@ public class AWTGUIFacade implements GUIFacade {
     public void setTextSize(int size) {
         if (graphics == null)
             return;
-        for (int i=2*size;i>=4;i--) {
-            Font font = new Font("Arial",Font.PLAIN,i);
-            graphics.setFont(font);
-            FontMetrics fm = graphics.getFontMetrics();
-            if (fm.getHeight() < size) {
-                break;
-            }
-        }
+        graphics.setFont(fonts.getFont(graphics,size));
     }
     
     @Override

@@ -76,7 +76,6 @@ public class MainMenuGameMode extends GameMode {
                 }
                 return;
         }
-
     }
 
     public void update() {
