@@ -12,6 +12,9 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -20,7 +23,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * Gestion du clavier avec AWT
+ * Gestion de la souris avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -82,9 +85,78 @@ public class Window extends Frame {
 
     }
 
+
     private Keyboard keyboard;
     private int pacmanX;
     private int pacmanY;
+
+    private static class Mouse implements MouseListener, MouseMotionListener {
+
+        private boolean[] buttons;
+        private int x;
+        private int y;
+
+        public Mouse() {
+            buttons = new boolean[4];
+        }
+
+        public boolean isButtonPressed(int button) {
+            if(button >= buttons.length)
+                return false;
+            return buttons[button];
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (e.getButton() <= 3) {
+                buttons[e.getButton()] = true;
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (e.getButton() <= 3) {
+                buttons[e.getButton()] = false;
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            x = e.getX();
+            y = e.getY();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            x = e.getX();
+            y = e.getY();
+        }
+
+    }
+
+    private Mouse mouse;
+    private int selectedTileX;
+    private int selectedTileY;
 
     public void init() {
         setTitle("Affichage et contrôles avec AWT");
@@ -109,6 +181,9 @@ public class Window extends Frame {
 
         keyboard = new Keyboard();
         canvas.addKeyListener(keyboard);
+        mouse = new Mouse();
+        canvas.addMouseListener(mouse);
+        canvas.addMouseMotionListener(mouse);
 
         pack();
     }
@@ -133,6 +208,19 @@ public class Window extends Frame {
         }
         if (keyboard.isKeyPressed(KeyEvent.VK_UP)) {
             pacmanY --;
+        }
+
+        selectedTileX = mouse.getX() / tileWidth;
+        selectedTileY = mouse.getY() / tileHeight;
+
+        if (selectedTileX >= 0 && selectedTileX < levelWidth
+                && selectedTileY >= 0 && selectedTileY < levelHeight) {
+            if (mouse.isButtonPressed(MouseEvent.BUTTON1)) {
+                level[selectedTileY][selectedTileX] = 2;
+            }
+            if (mouse.isButtonPressed(MouseEvent.BUTTON3)) {
+                level[selectedTileY][selectedTileX] = 5;
+            }
         }
     }
 
@@ -183,8 +271,18 @@ public class Window extends Frame {
                 }
             }
 
-            int tileX = 0;
-            int tileY = 2;
+            // Rectangle de sélection
+            int tileX = 5;
+            int tileY = 0;
+            g.drawImage(texture,
+                    selectedTileX * tileWidth, selectedTileY * tileHeight, selectedTileX * tileWidth + tileWidth, selectedTileY * tileHeight + tileHeight,
+                    tileX * tileWidth, tileY * tileHeight, tileX * tileWidth + tileWidth, tileY * tileHeight + tileHeight,
+                    null
+            );
+
+            // Pacman
+            tileX = 0;
+            tileY = 2;
             g.drawImage(texture,
                     pacmanX, pacmanY, pacmanX + tileWidth, pacmanY + tileHeight,
                     tileX * tileWidth, tileY * tileHeight, tileX * tileWidth + tileWidth, tileY * tileHeight + tileHeight,
