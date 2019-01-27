@@ -13,9 +13,12 @@ import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
- * Synchronisation de l'affichage avec AWT
+ * Afficher une image avec AWT
  *
  * @author Philippe-Henri Gosselin
  */
@@ -25,6 +28,7 @@ public class Window extends Frame {
     private int canvasHeight = 600;
     private Canvas canvas;
     private boolean running = true;
+    private BufferedImage texture;
 
     public void init() {
         setTitle("Affichage et contrôles avec AWT");
@@ -46,6 +50,10 @@ public class Window extends Frame {
         pack();
     }
 
+    public void loadTexture() throws IOException {
+        texture = ImageIO.read(this.getClass().getClassLoader().getResource("grid_tiles.png"));
+    }
+
     public void render() {
         BufferStrategy bs = canvas.getBufferStrategy();
         if (bs == null) {
@@ -58,6 +66,8 @@ public class Window extends Frame {
 
             g.setColor(Color.black);
             g.fillRect(0,0,canvasWidth,canvasHeight);
+
+            g.drawImage(texture, 0, 0, null);
 
             bs.show();
         }
@@ -84,10 +94,10 @@ public class Window extends Frame {
             render();
 
             long elapsed = System.nanoTime() - lastTime;
-            long milliSleep = (nanoPerFrame - elapsed) / 1000000;
-            if (milliSleep > 0) {
+            long miliSleep = (nanoPerFrame - elapsed) / 1000000;
+            if (miliSleep > 0) {
                 try {
-                    Thread.sleep (milliSleep);
+                    Thread.sleep (miliSleep);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -96,9 +106,10 @@ public class Window extends Frame {
         dispose();
     }
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
         Window window = new Window();
         window.init();
+        window.loadTexture();
         window.createCanvas();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
