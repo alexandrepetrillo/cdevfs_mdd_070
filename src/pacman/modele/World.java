@@ -5,7 +5,7 @@
 
 package pacman.modele;
 
-public class World {
+public class World implements Iterable<StaticElement> {
 
     private int width;
 
@@ -46,6 +46,10 @@ public class World {
                 return get(x - 1, y, Direction.NONE);
         }
         throw new RuntimeException("Direction inconnue");
+    }
+
+    public WorldIterator iterator() {
+        return new WorldIterator(this);
     }
 
     public int getWidth() {
