@@ -1,7 +1,8 @@
 package facturation;
 
-import back.FacturationServiceImpl;
-import front.EcranFacturation;
+
+import facturation.back.FacturationServiceImpl;
+import facturation.front.EcranFacturation;
 
 public class Main {
     public static void main(String... args) {

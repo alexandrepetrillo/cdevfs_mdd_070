@@ -1,7 +1,7 @@
 package facturation.front;
 
-import back.Article;
-import back.FacturationService;
+import facturation.back.Article;
+import facturation.back.FacturationService;
 
 import java.util.List;
 

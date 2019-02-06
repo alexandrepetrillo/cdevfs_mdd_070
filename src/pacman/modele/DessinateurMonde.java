@@ -15,7 +15,7 @@ public class DessinateurMonde {
     }
 
     public void dessiner() {
-        //mauvaise façon
+        System.out.println("mauvaise façon:");
         for (int i = 0; i < world.getHeight(); i++) {
             for (int j = 0; j < world.getWidth(); j++) {
                 StaticElement element = world.getElements()[i][j];
@@ -23,14 +23,14 @@ public class DessinateurMonde {
             }
         }
 
-        //bonne façon
+        System.out.println("bonne façon:");
         for (Iterator<StaticElement> iterator = world.iterator(); iterator.hasNext(); ) {
             StaticElement element = iterator.next();
             System.out.println(element);
         }
+        System.out.println("Autre bonne façon:");
         for (StaticElement element : world) {
             System.out.println(element);
-
         }
 
         //FOCUS ITERATOR
@@ -45,7 +45,10 @@ public class DessinateurMonde {
         for (Iterator<Integer> iterator = list.iterator(); iterator.hasNext(); ) {
             Integer integer = iterator.next();
         }
+    }
 
-
+    public static void main(String... args) {
+        DessinateurMonde dessinateurMonde = new DessinateurMonde();
+        dessinateurMonde.dessiner();
     }
 }
